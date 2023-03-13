@@ -100,7 +100,6 @@ const AbrirModalEliminar=(nombre,id)=>{
             <tr className="">
               <td className="py-3 px-5">Cliente</td>
               <td className="py-3 px-5">Documento</td>
-              <td className="py-3 px-5 text-center">Direccion</td>
               <td className="py-3 px-5 text-center">Contacto</td>
               <td className="py-3 px-5 text-center">Estado</td>
               <td className="py-3 px-5 text-center">Funciones</td>
@@ -133,11 +132,7 @@ const AbrirModalEliminar=(nombre,id)=>{
                     <h1 className="">{cliente.nro_Documento}</h1>
                   </div>
                 </td>
-
-                <td className="py-3 px-5 text-center">
-                  {cliente.direccion + " " + cliente.nroDireccion}
-                </td>
-
+                
                 <td className="py-3 px-5">
                   <div className="text-center">
                     <h1>

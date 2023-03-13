@@ -9,11 +9,15 @@ module.exports = {
       Robote:["Roboto Slab", "sans-serif"],
 
     },
-    extend: {colors:{
-      primary:"#e91e63",
-      secundary:{
-        900:"#343a40",
-        100:"#1E1F25",
+    extend: {
+      screens: {
+        'md': '768px',
+      },
+      colors:{
+        primary:"#e91e63",
+        secundary:{
+          900:"#343a40",
+          100:"#1E1F25",
 
       },
       tersary:"#2f051f"

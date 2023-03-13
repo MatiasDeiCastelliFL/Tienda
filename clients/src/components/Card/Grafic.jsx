@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Chart from "react-apexcharts";
 
 const Grafic = ({tip}) => {
-  const [options, setOptions] = useState({
+  const options = {
     
   colors: ["#212121"],
   
@@ -30,14 +30,14 @@ const Grafic = ({tip}) => {
         style:{colors:"#fff", fontSize: 16}
       }
     }
-  });
+  };
 
-  const [series, setSeries] = useState([
+  const series = [
     {
       name: "series-1",
       data: [30, 40, 45, 50, 49, 60, 70, 91]
     }
-  ]);
+  ];
 
   return (
     <div className="app">

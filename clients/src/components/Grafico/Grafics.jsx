@@ -2,7 +2,7 @@ import React from 'react';
 import Grafic from '../Card/Grafic';
 
 export default function Grafics({tip,color}) {
-  console.log(color)
+
   return (
     <div className='relative w-[500px] h-[400px] flex place-content-center flex-wrap ml-5 mt-5 rounded-3xl'>
       <div className='bg-white rounded-3xl w-full h-[350px] absolute bottom-0 mt-[100px]'>

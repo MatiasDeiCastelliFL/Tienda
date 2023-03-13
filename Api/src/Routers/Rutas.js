@@ -31,4 +31,5 @@ RouterServer.use('/Proveedor',RouterProveedor)
 RouterServer.use('/Impuesto',RouterImpuesto)
 RouterServer.use("/Ingresos",RutaDetalleIngreso)
 RouterServer.use("/Ventas",RutaDetalleVenta)
+
 module.exports= {RouterServer}

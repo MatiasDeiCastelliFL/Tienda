@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import axios  from "axios";
 const ModalEliminar = ({eliminarModal, setEliminarModal,eliminarCliente}) => {
     const tipo="Cliente eliminado correctamente"
@@ -20,7 +20,7 @@ const ModalEliminar = ({eliminarModal, setEliminarModal,eliminarCliente}) => {
             mensajeMostrar()
         }
 
-        console.log(respuesta.data)
+    
         
     }
 

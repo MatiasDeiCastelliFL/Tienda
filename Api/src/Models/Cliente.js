@@ -19,17 +19,9 @@ const Clientes= db.define('clientes',{
         allowNull:false,
         
     },
-    direccion:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    nroDireccion:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
     telefono:{
         type:DataTypes.STRING,
-        allowNull:false,
+        allowNull:true,
     },
     email:{
         type:DataTypes.STRING,
@@ -37,7 +29,6 @@ const Clientes= db.define('clientes',{
     },
     nombreUsuario:{
         type:DataTypes.STRING,
-
     },
     imagen:{
         type:DataTypes.STRING,
@@ -45,15 +36,21 @@ const Clientes= db.define('clientes',{
     },
     clave:{
         type:DataTypes.STRING,
+        allowNull:true
     },
     palabraSecreta:{
         type:DataTypes.STRING,
-        allowNull:false
+        allowNull:true
     },
     activo:{
         type:DataTypes.BOOLEAN,
-        defaultValue:true
+        defaultValue:false
+    },
+    activoAutenticador:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false,
     }
+    
 })
 
 module.exports={Clientes}

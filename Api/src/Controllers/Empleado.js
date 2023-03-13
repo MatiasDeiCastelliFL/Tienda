@@ -10,22 +10,30 @@ const { Empleado } = require("../Models/Empleado");
 const { Rol } = require("../Models/Rol");
 const { FiltrarEmpleado,ActivarBd,ActivarBdcuenta,DesactivarBd, AltaBdEmpleado, UpdateBdEmpleado,comprobarEmpleado} = require("../Services/DatoBd");
 const { json } = require("sequelize");
+const { Clientes } = require("../Models/Cliente");
 
 
 const Crear= async (req,res) =>{
 
    const {nombre,apellido,nro_Documento,direccion,nroDireccion,telefono,email,nombreUsuario,clave,palabraSecreta,documentoId,roleId}=req.body
 
- 
+   let existeCorreo;
+   
    const Error = [];
    if(nombre && apellido && nro_Documento && direccion && nroDireccion && telefono && email && nombreUsuario && clave && palabraSecreta && documentoId && roleId){
       const existeDocumento= await Empleado.findOne({where:{
          nro_Documento: nro_Documento
       }});
-
-      const existeCorreo = await Empleado.findOne({where:{
+      
+      existeCorreo = await Empleado.findOne({where:{
         email:email
       }});
+
+      if(existeCorreo==null){
+         existeCorreo = await Clientes.findOne({where:{
+            email:email
+         }})
+      }
 
       const existeTelefono= await Empleado.findOne({
         where:{
@@ -175,6 +183,8 @@ const LoginBusqueda = async (req,res)=>{
    }
    
 }
+
+
 
 
 

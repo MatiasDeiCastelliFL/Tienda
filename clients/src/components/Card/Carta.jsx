@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as Faicons from 'react-icons/fa'
 export default function Carta({nombre,icono}) {
-    console.log(icono)
+
 
   return (
     <div className='relative w-[370px] h-[175px] '>

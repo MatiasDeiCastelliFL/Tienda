@@ -12,6 +12,14 @@ const Ventas = db.define("ventas",{
         type:DataTypes.DATEONLY,
         defaultValue:DataTypes.NOW
     },
+    direccion:{
+        type:DataTypes.STRING,
+        allowNull:true
+    },
+    nroDireccion:{
+        type:DataTypes.STRING,
+        allowNull:true
+    },
     total:{
         type:DataTypes.DOUBLE
     },

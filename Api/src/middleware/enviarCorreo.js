@@ -2,7 +2,7 @@ const transporter  = require("../utils/mailer");
 
 
 const recibirEmail= async(email)=>{
-    console.log(email)
+
     await transporter.sendMail({
         from: '<tiendar135@gmail.com>',
         to :email,
@@ -14,7 +14,7 @@ const recibirEmail= async(email)=>{
 }
 
 const recibirEmailCliente= async(email)=>{
-    console.log(email)
+
     await transporter.sendMail({
         from: '<tiendar135@gmail.com>',
         to :email,
@@ -27,7 +27,7 @@ const recibirEmailCliente= async(email)=>{
 
 
 const recibirEmailProveedor= async(email)=>{
-    console.log(email)
+
     await transporter.sendMail({
         from: '<tiendar135@gmail.com>',
         to :email,

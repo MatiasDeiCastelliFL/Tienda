@@ -58,13 +58,10 @@ const AltaBdCliente = async (body, modelo, path) => {
   if (path) {
     const ImagenSubida = await cloudinary.v2.uploader.upload(path);
     const { url } = ImagenSubida;
-    console.log("llegue")
     const objecto = {
       nombre: body.nombre,
       apellido: body.apellido,
       nro_Documento: body.nro_Documento,
-      direccion: body.direccion,
-      nroDireccion: body.nroDireccion,
       telefono: body.telefono,
       email: body.email,
       nombreUsuario: body.nombreUsuario,
@@ -99,6 +96,31 @@ const AltaBdCliente = async (body, modelo, path) => {
     return DatoAcrear;
   }
 };
+
+
+const AltaBdClienteAutenticacion = async (body, modelo) => {
+
+  const ImagenSubida = await cloudinary.v2.uploader.upload(body.imagen);
+    const { url } = ImagenSubida;
+    const DatoAcrear = await modelo.create({
+      nombre:body.nombre,
+      apellido:body.apellido,
+      nro_Documento:body.nro_Documento,
+      telefono:body.telefono,
+      email:body.email,
+      nombreUsuario:body.nombreUsuario,
+      imagen:url,
+      activo:true,
+      activoAutenticador:true,
+      documentoId:body.documentoId
+    });
+
+    return DatoAcrear;
+}
+
+
+
+
 const AltaBdEmpleado = async (body, modelo, path) => {
   if (path) {
     const ImagenSubida = await cloudinary.v2.uploader.upload(path);
@@ -199,20 +221,26 @@ const ActivarBdcuenta = async (email, modelo) => {
       email,
     },
   });
-  const dataValues = elemento.dataValues;
-  if (dataValues.activo === false) {
-    await modelo.update(
-      { activo: true },
-      {
-        where: {
-          email: email,
-        },
-      }
-    );
-    return true;
-  } else {
-    return false;
+
+  if(elemento){
+    const dataValues = elemento?.dataValues;
+    if (dataValues.activo === false) {
+      await modelo.update(
+        { activo: true },
+        {
+          where: {
+            email: email,
+          },
+        }
+      );
+      return true;
+    } else {
+      return false;
+    }
+  }else{
+    return false
   }
+  
 };
 
 const ActivarBd = async (id, modelo) => {
@@ -308,7 +336,6 @@ const UpdateBdCliente = async (modelo, body, path,id) => {
       nombre: body.nombre,
       apellido: body.apellido,
       nro_Documento: body.nro_Documento,
-      direccion: body.direccion,
       telefono: body.telefono,
       email: body.email,
       nombreUsuario: body.nombreUsuario,
@@ -337,7 +364,6 @@ const UpdateBdClienteSinImg = async (modelo, body,id) => {
       nombre: body.nombre,
       apellido: body.apellido,
       nro_Documento: body.nro_Documento,
-      direccion: body.direccion,
       telefono: body.telefono,
       email: body.email,
       nombreUsuario: body.nombreUsuario,
@@ -503,11 +529,12 @@ const UpdateBdFotos = async (modelo, body, path) => {
 };
 //fin de actualizacion
 const FiltrarBD = async (modelo, configuracion, propiedad, id) => {
+  console.log(propiedad)
   if (Object.entries(configuracion).length > 0) {
     if (id) {
-      return await modelo.findAll({
+      return await modelo.findOne({
         include: configuracion,
-        where: { [propiedad]: {id} },
+        where: { [propiedad]: id },
       });
     } else {
       return await modelo.findAll({ include: configuracion });
@@ -607,16 +634,46 @@ const comprobarEmpleado = async (ModeloEmpleado, email, pass) => {
     },
   });
 
+  
+
+  
   if (empleado) {
     const passEmple = empleado?.dataValues?.clave;
     const palabraSecreta = empleado?.dataValues?.palabraSecreta;
 
     let PassEnBytes = CryptoJS.AES.decrypt(passEmple, palabraSecreta);
-
-    console.log(PassEnBytes)
     
     let PassDescriptada = PassEnBytes.toString(CryptoJS.enc.Utf8);
-    console.log(PassDescriptada)
+
+    if (PassDescriptada.replace(/['"]+/g, "") === pass) {
+      return "Ingresando";
+    } else {
+      return "La contraseña no coinciden";
+    }
+  } else {
+    return "Email incorrect";
+  }
+};
+
+const comprobarCliente = async (ModeloCliente, email, pass) => {
+  let Cliente = await ModeloCliente.findOne({
+    attributes: ["email", "clave", "palabraSecreta"],
+    where: {
+      email: { [Op.eq]: email },
+    },
+  });
+
+  
+
+  
+  if (Cliente) {
+    const passCliente = Cliente?.dataValues?.clave;
+    
+    const palabraSecreta = Cliente?.dataValues?.palabraSecreta;
+
+    let PassEnBytes = CryptoJS.AES.decrypt(passCliente, palabraSecreta);
+    
+    let PassDescriptada = PassEnBytes.toString(CryptoJS.enc.Utf8);
 
     if (PassDescriptada.replace(/['"]+/g, "") === pass) {
       return "Ingresando";
@@ -629,10 +686,14 @@ const comprobarEmpleado = async (ModeloEmpleado, email, pass) => {
 };
 
 
-const BuscarNameUsuario= async(Modelo,NombreUsuario)=>{
+const BuscarNameUsuarioAutenticado= async(Modelo,NombreUsuario)=>{
 
     let Name= await Modelo.findAll({where:{
-      nombreUsuario:NombreUsuario
+      
+      [Op.and]: [
+        { nombreUsuario:NombreUsuario },
+        { activoAutenticador: true }
+      ]
     }})
 
     return (Name.length>0) ? true : false
@@ -640,6 +701,17 @@ const BuscarNameUsuario= async(Modelo,NombreUsuario)=>{
 
 }
 
+
+const BuscarNameUsuario= async(Modelo,NombreUsuario)=>{
+
+  let Name= await Modelo.findAll({where:{
+    nombreUsuario:NombreUsuario
+  }})
+
+  return (Name.length>0) ? true : false
+
+
+}
 const BuscarEmailUsuario= async(Modelo,email)=>{
 
   let Correo= await Modelo.findAll({where:{
@@ -676,9 +748,62 @@ const BuscarDocumentoUsuario= async(Modelo,doc)=>{
 
 }
 
+const BuscarEmailUsuarioAutenticado= async(Modelo,email)=>{
+
+  let Correo= await Modelo.findAll({where:{
+   
+ 
+
+
+    [Op.and]: [
+      {  email:{[Op.eq]:email},
+      activoAutenticador:{[Op.is]: true} },
+    ]
+  }})
+
+  console.log(Correo)
+
+
+  return Correo.length >0 ? true :false
+
+
+}
+
+
+const BuscarTelefonoUsuarioAutenticado= async(Modelo,telefono)=>{
+
+  let Tel= await Modelo.findAll({where:{
+    [Op.and]: [
+      { telefono:telefono},
+      { activoAutenticador: true }
+    ]
+    
+  }})
+
+  return (Tel.length>0) ? true : false
+
+
+}
+
+const BuscarDocumentoUsuarioAutenticado= async(Modelo,doc)=>{
+
+  let Document= await Modelo.findAll({where:{
+    [Op.and]: [
+      { nro_Documento:doc },
+      { activoAutenticador: true }
+    ]
+    
+  }})
+
+  return (Document.length>0) ? true : false
+
+
+}
+
+
 
 const FiltrarEmpleado = async (
-  ModeloArticulo,
+  ModeloEmpleado,
   ModeloDocumento,
   ModeloRol,
   Propiedad1,
@@ -686,7 +811,7 @@ const FiltrarEmpleado = async (
 ) => {
   let articulo;
   if (Propiedad1) {
-    articulo = await ModeloArticulo.findAll({
+    articulo = await ModeloEmpleado.findOne({
       include: [
         { model: ModeloDocumento, attributes: ["nombre"] },
         { model: ModeloRol, attributes: ["name"] },
@@ -696,7 +821,7 @@ const FiltrarEmpleado = async (
       },
     });
   } else {
-    articulo = await ModeloArticulo.findAll({
+    articulo = await ModeloEmpleado.findAll({
       include: [
         { model: ModeloDocumento, attributes: ["nombre"] },
         { model: ModeloRol, attributes: ["name"] },
@@ -736,8 +861,10 @@ module.exports = {
   UpdateBdImpuesto,
   ActivarBdcuenta,
   FiltrarBDId,
+  comprobarCliente,
   BuscarEmailUsuario,
   BuscarTelefonoUsuario,
   UpdateBdClienteSinImg,
-  BuscarDocumentoUsuario
+  BuscarDocumentoUsuario,
+  AltaBdClienteAutenticacion,BuscarNameUsuarioAutenticado,BuscarEmailUsuarioAutenticado,BuscarTelefonoUsuarioAutenticado,BuscarDocumentoUsuarioAutenticado
 };

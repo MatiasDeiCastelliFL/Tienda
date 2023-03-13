@@ -81,12 +81,11 @@ const Modal = ({ showModal, setShowModal, Operations }) => {
   const Peticion = async (e) => {
     e.preventDefault();
 
-    console.log(DatoAgregar.imagen);
     const form = document.querySelector("form");
     let respuesta;
     const formData = new FormData(form);
 
-    console.log(form.imagen)
+
     if (Operations.nombre === "Modificar") {
       respuesta = await realizarPeticion(urlActualizar, "put", formData);
     } else {
@@ -108,7 +107,7 @@ const Modal = ({ showModal, setShowModal, Operations }) => {
   useEffect(() => {
     BuscarCliente(Operations.id);
     Tipo();
-  }, []);
+  });
   const Tipo = async () => {
     const respuesta = await axios.get(urlTipo);
     setTipo(respuesta.data);

@@ -2,7 +2,7 @@ const { AltaVenta,Anular,FiltrarVentas} = require("../Services/DatosVenta");
 
 const AltaVentas= async (req,res)=>{
    let Mensaje=[];
-    const {DatoArticulos,empleadoId,clienteId,codigoVenta} = req.body
+    const {DatoArticulos,empleadoId,clienteId,codigoVenta,direccion,nroDireccion} = req.body
 
  
     if(DatoArticulos.length>0 && empleadoId && clienteId && codigoVenta){
@@ -26,6 +26,7 @@ const AltaVentas= async (req,res)=>{
         if(!codigoVenta){
             Mensaje.push("Ingrese el codigo de venta")
         }
+       
 
         res.status(200).json(Mensaje)
     }

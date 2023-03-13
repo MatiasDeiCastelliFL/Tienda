@@ -9,7 +9,7 @@ const Paginacion = ({ todoCliente, paginado, totalPagina }) => {
   }
 
   const onfocus = (numero) => {
-    console.log(numero)
+   
 
     const activo = document.getElementById(numero);
     activo.setAttribute('style', 'background-color: #22C55E;');

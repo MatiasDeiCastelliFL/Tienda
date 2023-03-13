@@ -1,9 +1,12 @@
 import React from 'react';
 import Navegacion from '../panelDueño/Navegador/Navegacion';
 import Carta from '../Card/Carta';
+import Cookies from 'js-cookie';
 
 import Grafics from '../Grafico/Grafics';
 export default function Home() {
+  const valorDeLaCookie = Cookies.get('DatosAutenticacion');
+  console.log(valorDeLaCookie)
   return (
     <div className='text-white'>
 
